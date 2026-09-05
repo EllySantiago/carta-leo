@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carta para pequeno Leo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #ecdfb8;
+    --paper-dark: #ddc99a;
+    --ink: #2b2620;
+    --shadow: rgba(90, 70, 30, 0.28);
+  }
+
+  *{
+    box-sizing: border-box;
+  }
+
+  html, body{
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+  }
+
+  body{
+    font-family: 'Special Elite', 'Courier New', monospace;
+    color: var(--ink);
+    background: linear-gradient(160deg, #f7efdc 0%, #f1e7cd 45%, #ecdfc0 100%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 6vh 20px 8vh;
+    min-height: 100vh;
+  }
+
+  .sheet-wrap{
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .letter{
+    position: relative;
+    width: 100%;
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(255,250,220,0.4), transparent 45%),
+      radial-gradient(ellipse at 85% 90%, rgba(150,120,60,0.18), transparent 50%),
+      linear-gradient(var(--paper), var(--paper-dark));
+    padding: 8vw 10vw 8vw;
+    box-shadow:
+      0 8px 20px var(--shadow),
+      0 20px 45px rgba(90,70,30,0.18);
+    border-radius: 2px;
+    line-height: 1.65;
+    font-size: 16.5px;
+    min-height: 52vh;
+  }
+
+  .letter::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at center, transparent 55%, rgba(120,90,40,0.15) 100%),
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.012) 0px, rgba(0,0,0,0.012) 1px, transparent 1px, transparent 2px);
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+
+  .letter::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 45px rgba(140,110,50,0.22), inset 0 0 10px rgba(0,0,0,0.12);
+    pointer-events: none;
+  }
+
+  .letter-title{
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    font-size: 1.35em;
+    letter-spacing: 0.5px;
+    margin: 0 0 1.4em;
+    padding-bottom: 0.8em;
+    border-bottom: 1px solid rgba(43, 38, 32, 0.25);
+  }
+
+  #page-content{
+    position: relative;
+    z-index: 1;
+    min-height: 34vh;
+    opacity: 1;
+    transition: opacity 0.28s ease;
+  }
+
+  #page-content.fade{
+    opacity: 0;
+  }
+
+  p{
+    margin: 0 0 1.2em;
+  }
+
+  .poem-quote{
+    font-style: italic;
+  }
+
+  .poem-plain{
+    font-style: normal;
+  }
+
+  .pagination{
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    margin-top: 1.6em;
+  }
+
+  .page-arrow{
+    background: none;
+    border: none;
+    color: var(--ink);
+    font-size: 1.3em;
+    cursor: pointer;
+    padding: 4px 6px;
+    line-height: 1;
+    opacity: 0.75;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    font-family: 'Special Elite', monospace;
+  }
+
+  .page-arrow:hover{
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  .page-arrow.disabled{
+    opacity: 0.2;
+    cursor: default;
+    pointer-events: none;
+    transform: none;
+  }
+
+  .dots{
+    display: flex;
+    gap: 0.55em;
+  }
+
+  .dot{
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: rgba(43, 38, 32, 0.3);
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .dot:hover{
+    transform: scale(1.2);
+  }
+
+  .dot.active{
+    background: var(--ink);
+    transform: scale(1.15);
+  }
+
+  @media (max-width: 560px){
+    .letter{
+      font-size: 15px;
+      padding: 9vw 8vw 9vw;
+    }
+    .letter-title{
+      font-size: 1.15em;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div class="sheet-wrap">
+    <div class="letter">
+      <div class="letter-title">Carta para pequeno Leo</div>
+      <div id="page-content"></div>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+<script>
+  const pages = ["      <p class=\"poem-quote\">\n        “Navegando no escuro do passado<br>\n        encontrei uma estrelinha<br>\n        apagada, solitária, escondida<br>\n        no fundo do coração<br>\n        de um rapaz chamado Leo<br>\n        ela brilhava como nunca<br>\n        mas ninguém podia ver<br>\n        o passado ele escondeu,<br>\n        junto da estrela, o passado estava<br>\n        mas eu consegui ver, eu estive lá<br>\n        o pai permitiu estar<br>\n        tudo que fazemos, um dia voltará<br>\n        por isso não façais mal<br>\n        o pai sabendo que eu não queria assustar nem ferir me permitiu<br>\n        me permitiu tocar a alma do pequeno leo<br>\n        me permitiu estar com ele, eu sabia, Leo não gostava de estar sozinho.<br>\n        pequeno Leo, muito travesso fostes<br>\n        muito mal sofreste, muito sozinho esteve, desde pequeno<br>\n        forte fostes, desde de pequeno<br>\n        silencioso fostes desde pequeno<br>\n        esse passado já morreu, leo<br>\n        o passado em que amar significa vigiar e controlar morreu<br>\n        em que ser amado era ser controlado já não existe e não cabe em ti<br>\n        decides o que queres em tua vida<br>\n        e vais, sem medo no coração<br>\n        erre, chore, levante e tente de novo<br>\n        não está mais sozinho<br>\n        nunca estiveste na verdade, Deus pai esteve contigo<br>\n        corte as amarras que te prendem ao passado<br>\n        chore a criança que poderia ter sido<br>\n        mas deixe que ela seja o adulto que ela sonhava ser<br>\n        eu sou meu sonho de infância<br>\n        o que você quer ser quando crescer?<br>\n        eu fiz minha vontade acontecer tijolo por tijolo<br>\n        dia por dia, sem compensar dias perdidos mas sem desistir, tentando até à perfeição<br>\n        disciplina de seguir mesmo sem ver a linha de chegada,<br>\n        de tentar de novo mesmo sem os frutos<br>\n        isso, é a disciplina pura<br>\n        cure se, a escolha e o poder pra isso<br>\n        já está nas suas mãos.’’\n      </p>", "      <p class=\"poem-plain\">\n        o presente e o que escolhemos daqui pra frente nos define<br>\n        você não teve escolha sobre sua infância e passado, mas tem escolha sobre o que vai fazer daqui pra frente<br>\n        ninguem é maior do que ninguem, perante Deus todos sao irmaos<br>\n        você tem a força pra nao cair em velhos hábitos<br>\n        ou me enganei e você é fraco e não consegue quebrar esses padrões disfuncionais antigos?<br>\n        ache o que é saudável pra você<br>\n        cure seu coração, se permita viver de verdade<br>\n        há luz em vosso futuro se você acreditar, ter fé(em si mesmo quando necessario) e nao desistir<br>\n        não desista de si mesmo, se reconstrua<br>\n        esse é o extraordinário, é viver e se curar por si sem se importar com a escolha alheia<br>\n        é escolher ser justo consigo e com os outros<br>\n        é escolher amar e se deixar ser amado<br>\n        é reconhecer a presença de Deus pai em tudo inclusive em si mesmo<br>\n        você tem o talento, direcione para sua cura agora, ache o caminho que você quer seguir<br>\n        as consequências que quer viver<br>\n        eu sigo o caminho de muitos, mas acima de todos o de Jesus<br>\n        todos com consequências que já aprendi a conviver, pro bem e pro mal<br>\n        e muitos caminhos que estou aprendendo ainda a ver e sentir e seguir<br>\n        sigo o meu próprio caminho, abraçando minha própria solidão, abraçando minha própria carência e minha própria mente que não pode ser pronunciada<br>\n        ache seu caminho de cura e encontre paz<br>\n        vou ver você quando finalmente encontrar o caminho,<br>\n        Deus pai te mostrará, e eu saberei o quando\n      </p>", "      <p class=\"poem-plain\">\n        Deus não te rejeitou, ele só precisava que você se livrasse de um peso que não te pertence mais<br>\n        sabe como Deus se manifesta em minha vida além da proteção de aço?<br>\n        através das pessoas na exata hora que preciso, são os presentes de Deus que eu cuido muito bem(mostre ao pai como você cuida do que já tem e ele lhe dará mais, são presentes e mesmo que ele não de, espere, sempre tem um motivo, uma hora certa e um lugar), na medida do possível, seja um pastor que me deu a palavra exata que eu precisava na rua, seja o motorista que eu dou boa noite e sou educada todos os dias ao ponto de ele me reconhecer e parar fora da parada só pela minha educação, é naquele gesto aleatório de alguém conversar comigo em minha tristeza, é na lufada de vento quando estou absorta em pensamentos profundos, é na onda do mar quando estou triste mesmo na presença das criações divinas<br>\n        Deus é dono de tudo, por isso ele é justo mas acima de tudo ele é responsável, ele cuida de mim e me dá presentes, no tempo dele mas dá, sabe um presente legal? pássaros, eu pedi pra ver um pássaro bonito e ele me deu vários pássaros bonitos pra ver no meu quintal, eu pedi e esperei sem pressa, poucos meses depois as árvores ao redor de minha casa estavam fartos em pássaros\n      </p>", "      <p class=\"poem-plain\">\n        peça o que deseja ao pai, sem pressa, com disciplina e creia que já lhe foi dado, peça ao pai para cuidar quando você não o pode, a herança vem de Deus mas ajuda a moldar caráter tentar ajudar de volta, nós humanos sentimos que estamos retribuindo, isso é demonstrar gratidão.<br>\n        ser gentil não é estratégia, é jeito de ser.<br>\n        é jeito de ser grato a tudo que deus dá e faz.<br>\n        quando se acha algo belo, não se pode querer tirar proveito, ferir ou levar vantagem daquilo esse é o conceito de immanuel kant mas eu o aplico ao amor<br>\n        para amar, não se deve querer tirar proveito daquilo, nem obter nada daquilo, jesus foi assim conosco, nós somos humanos, somos falhos, mas escolher levantar de novo e achar novos motivos pra ser grato, isso nos torna fortes e verdadeiramente livres o nosso caráter é a única coisa que nós somos os únicos a quebrar e remoldar e que ninguém pode roubar.\n      </p>\n      <p class=\"poem-quote\">\n        “leve uma vida tão justa e boa que ninguém precisará perguntar se você tem Deus na sua vida”\n      </p>\n      <p class=\"poem-plain\">\n        domínio próprio, ver a sombra do outro e entender que foi a forma que ele achou de sobreviver, sem tentar mudar ou usar o outro, apenas dando a ele a liberdade de escolher,<br>\n        Demônios e anjos no fim são energias que aprendemos a direcionar, demônios não obedecem ordem, obedecem barganha, sonham com a vitalidade da imperatriz e tem esperança na cura da estrela e são machucados pelo sol.<br>\n        cure se por si mesmo, sua escolha deve ser você<br>\n        aprenda a receber e dar afeto real e saúdavel\n      </p>", "      <p class=\"poem-plain\">\n        a resposta pra tudo que voce precisa esta em Deus e dentro de voce<br>\n        é sempre bom te ver Leo, fico feliz que não desistiu e sobreviveu \n      </p>\n      <p class=\"poem-quote\">\n        “porque até aqui nos ajudou o Senhor”\n      </p>"];
+
+  let current = 0;
+  const contentEl = document.getElementById('page-content');
+  const paginationEl = document.getElementById('pagination');
+
+  function buildPagination(){
+    paginationEl.innerHTML = '';
+
+    const prev = document.createElement('button');
+    prev.className = 'page-arrow';
+    prev.innerHTML = '&#8249;';
+    prev.setAttribute('aria-label', 'Página anterior');
+    prev.addEventListener('click', () => {
+      if (current > 0){ current--; renderPage(); }
+    });
+    paginationEl.appendChild(prev);
+
+    const dotsWrap = document.createElement('div');
+    dotsWrap.className = 'dots';
+    pages.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === current ? ' active' : '');
+      dot.addEventListener('click', () => { current = i; renderPage(); });
+      dotsWrap.appendChild(dot);
+    });
+    paginationEl.appendChild(dotsWrap);
+
+    const next = document.createElement('button');
+    next.className = 'page-arrow';
+    next.innerHTML = '&#8250;';
+    next.setAttribute('aria-label', 'Próxima página');
+    next.addEventListener('click', () => {
+      if (current < pages.length - 1){ current++; renderPage(); }
+    });
+    paginationEl.appendChild(next);
+
+    prev.classList.toggle('disabled', current === 0);
+    next.classList.toggle('disabled', current === pages.length - 1);
+  }
+
+  function renderPage(){
+    contentEl.classList.add('fade');
+    setTimeout(() => {
+      contentEl.innerHTML = pages[current];
+      buildPagination();
+      contentEl.classList.remove('fade');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 180);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' && current < pages.length - 1){ current++; renderPage(); }
+    if (e.key === 'ArrowLeft' && current > 0){ current--; renderPage(); }
+  });
+
+  // initial render (no fade delay needed)
+  contentEl.innerHTML = pages[current];
+  buildPagination();
+</script>
+
+</body>
+</html>
