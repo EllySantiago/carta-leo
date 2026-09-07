@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carta para pequeno Leo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #ecdfb8;
+    --paper-dark: #ddc99a;
+    --ink: #2b2620;
+    --shadow: rgba(90, 70, 30, 0.28);
+  }
+
+  *{
+    box-sizing: border-box;
+  }
+
+  html, body{
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+  }
+
+  body{
+    font-family: 'Special Elite', 'Courier New', monospace;
+    color: var(--ink);
+    background: linear-gradient(160deg, #f7efdc 0%, #f1e7cd 45%, #ecdfc0 100%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 6vh 20px 8vh;
+    min-height: 100vh;
+  }
+
+  .sheet-wrap{
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .letter{
+    position: relative;
+    width: 100%;
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(255,250,220,0.4), transparent 45%),
+      radial-gradient(ellipse at 85% 90%, rgba(150,120,60,0.18), transparent 50%),
+      linear-gradient(var(--paper), var(--paper-dark));
+    padding: 8vw 10vw 8vw;
+    box-shadow:
+      0 8px 20px var(--shadow),
+      0 20px 45px rgba(90,70,30,0.18);
+    border-radius: 2px;
+    line-height: 1.65;
+    font-size: 16.5px;
+    min-height: 52vh;
+  }
+
+  .letter::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at center, transparent 55%, rgba(120,90,40,0.15) 100%),
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.012) 0px, rgba(0,0,0,0.012) 1px, transparent 1px, transparent 2px);
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+
+  .letter::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 45px rgba(140,110,50,0.22), inset 0 0 10px rgba(0,0,0,0.12);
+    pointer-events: none;
+  }
+
+  .letter-title{
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    font-size: 1.35em;
+    letter-spacing: 0.5px;
+    margin: 0 0 1.4em;
+    padding-bottom: 0.8em;
+    border-bottom: 1px solid rgba(43, 38, 32, 0.25);
+  }
+
+  #page-content{
+    position: relative;
+    z-index: 1;
+    min-height: 34vh;
+    opacity: 1;
+    transition: opacity 0.28s ease;
+  }
+
+  #page-content.fade{
+    opacity: 0;
+  }
+
+  p{
+    margin: 0 0 1.2em;
+  }
+
+  .poem-quote{
+    font-style: italic;
+  }
+
+  .poem-plain{
+    font-style: normal;
+  }
+
+  .pagination{
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    margin-top: 1.6em;
+  }
+
+  .page-arrow{
+    background: none;
+    border: none;
+    color: var(--ink);
+    font-size: 1.3em;
+    cursor: pointer;
+    padding: 4px 6px;
+    line-height: 1;
+    opacity: 0.75;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    font-family: 'Special Elite', monospace;
+  }
+
+  .page-arrow:hover{
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  .page-arrow.disabled{
+    opacity: 0.2;
+    cursor: default;
+    pointer-events: none;
+    transform: none;
+  }
+
+  .dots{
+    display: flex;
+    gap: 0.55em;
+  }
+
+  .dot{
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: rgba(43, 38, 32, 0.3);
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .dot:hover{
+    transform: scale(1.2);
+  }
+
+  .dot.active{
+    background: var(--ink);
+    transform: scale(1.15);
+  }
+
+  @media (max-width: 560px){
+    .letter{
+      font-size: 15px;
+      padding: 9vw 8vw 9vw;
+    }
+    .letter-title{
+      font-size: 1.15em;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div class="sheet-wrap">
+    <div class="letter">
+      <div class="letter-title">Carta para pequeno Leo</div>
+      <div id="page-content"></div>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+<script>
+  const pages = ["      <p class=\"poem-plain\">\n        agora que você sabe que eu vi você em sonho<br>\n        que li teu passado com a permissão do pai<br>\n        entende porque admiro você?<br>\n        minha intuição antes de eu saber já me dizia<br>\n        mas você é uma pessoa incrível, eu queria que visse isso em si mesmo<br>\n        tu usa palavras cortantes como teu modo de defesa<br>\n        e ao mesmo tempo de demonstrar afeto<br>\n        pare de esconder seu coração<br>\n        mostre pro mundo sua beleza<br>\n        você é um bobo inseguro, seja corajoso<br>\n        se errar, é isso, recomeça<br>\n        não precisa ficar escondendo com tanto empenho<br>\n        nesse parco tempo, tu desenvolveu as habilidades que demorei semanas<br>\n        da uma vontade de xingar e ao mesmo tempo admirar que meu Deus<br>\n        só poder te ver no baralho me deixa tristinha mas acontece<br>\n        tu tem novas habilidades divertidas, autocontrole(auto cura seria a palavra mais exata eu acho) é uma delas, carisma também, a lábia aprimorou também<br>\n        só falta a fé em si, e eu vi que você usou as técnicas que ensinei, espero terem sido úteis<br>\n        meu divo, tu evolui numa velocidade tão rápida que assusta, meu melhor aluno mds que orgulho<br>\n        ai ó, agora estamos no mesmo nível<br>\n        você só precisa aprender a acreditar mais em si<br>\n        Será que vale a pena se incomodar com um complexo de inferioridade assim?<br>\n        mas enfim, olhemos os lados positivos, tuas palavras cortantes desenvolveram minha língua de chicote e minha imprevisibilidade desenvolveram tua percepção para imprevistos<br>\n        o melhor que desenvolvi foi a habilidade de não ser afetada e deixar o outro irritado com minha falta de reação<br>\n        isso sim é diversão pura hehe\n      </p>", "      <p class=\"poem-plain\">\n        sabe o sonho que eu tive? eu vi tu sorrindo<br>\n        foi uma visão diabólica, tu sempre sério e em sonho te vi sorrindo<br>\n        a incoerência me deixou em shock<br>\n        mas tu tinha um passado profundo vei, escavei um poço<br>\n        tu da um curso de psicologia da causa e efeito de 300 páginas facil facil<br>\n        é um elogio acredite<br>\n        nao sei quem preocupava mais minha rainha, eu ou você<br>\n        inclusive, gosto de você pequeno Leo<br>\n        nao como amigo mas é a vida<br>\n        amar é uma escolha no fim das contas mesmo<br>\n        ainda estou revoltada com tua velocidade de aprender, como pode cara<br>\n        e sim, eu sou aleatória sim, a medida certa pra te fazer sorrir princesa\n      </p>"];
+
+  let current = 0;
+  const contentEl = document.getElementById('page-content');
+  const paginationEl = document.getElementById('pagination');
+
+  function buildPagination(){
+    paginationEl.innerHTML = '';
+
+    const prev = document.createElement('button');
+    prev.className = 'page-arrow';
+    prev.innerHTML = '&#8249;';
+    prev.setAttribute('aria-label', 'Página anterior');
+    prev.addEventListener('click', () => {
+      if (current > 0){ current--; renderPage(); }
+    });
+    paginationEl.appendChild(prev);
+
+    const dotsWrap = document.createElement('div');
+    dotsWrap.className = 'dots';
+    pages.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === current ? ' active' : '');
+      dot.addEventListener('click', () => { current = i; renderPage(); });
+      dotsWrap.appendChild(dot);
+    });
+    paginationEl.appendChild(dotsWrap);
+
+    const next = document.createElement('button');
+    next.className = 'page-arrow';
+    next.innerHTML = '&#8250;';
+    next.setAttribute('aria-label', 'Próxima página');
+    next.addEventListener('click', () => {
+      if (current < pages.length - 1){ current++; renderPage(); }
+    });
+    paginationEl.appendChild(next);
+
+    prev.classList.toggle('disabled', current === 0);
+    next.classList.toggle('disabled', current === pages.length - 1);
+  }
+
+  function renderPage(){
+    contentEl.classList.add('fade');
+    setTimeout(() => {
+      contentEl.innerHTML = pages[current];
+      buildPagination();
+      contentEl.classList.remove('fade');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 180);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' && current < pages.length - 1){ current++; renderPage(); }
+    if (e.key === 'ArrowLeft' && current > 0){ current--; renderPage(); }
+  });
+
+  // initial render (no fade delay needed)
+  contentEl.innerHTML = pages[current];
+  buildPagination();
+</script>
+
+</body>
+</html>
