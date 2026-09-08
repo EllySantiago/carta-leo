@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carta para pequeno Leo III</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #ecdfb8;
+    --paper-dark: #ddc99a;
+    --ink: #2b2620;
+    --shadow: rgba(90, 70, 30, 0.28);
+  }
+
+  *{
+    box-sizing: border-box;
+  }
+
+  html, body{
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+  }
+
+  body{
+    font-family: 'Special Elite', 'Courier New', monospace;
+    color: var(--ink);
+    background: linear-gradient(160deg, #f7efdc 0%, #f1e7cd 45%, #ecdfc0 100%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 6vh 20px 8vh;
+    min-height: 100vh;
+  }
+
+  .sheet-wrap{
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .letter{
+    position: relative;
+    width: 100%;
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(255,250,220,0.4), transparent 45%),
+      radial-gradient(ellipse at 85% 90%, rgba(150,120,60,0.18), transparent 50%),
+      linear-gradient(var(--paper), var(--paper-dark));
+    padding: 8vw 10vw 8vw;
+    box-shadow:
+      0 8px 20px var(--shadow),
+      0 20px 45px rgba(90,70,30,0.18);
+    border-radius: 2px;
+    line-height: 1.65;
+    font-size: 16.5px;
+    min-height: 52vh;
+  }
+
+  .letter::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at center, transparent 55%, rgba(120,90,40,0.15) 100%),
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.012) 0px, rgba(0,0,0,0.012) 1px, transparent 1px, transparent 2px);
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+
+  .letter::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 45px rgba(140,110,50,0.22), inset 0 0 10px rgba(0,0,0,0.12);
+    pointer-events: none;
+  }
+
+  .letter-title{
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    font-size: 1.35em;
+    letter-spacing: 0.5px;
+    margin: 0 0 1.4em;
+    padding-bottom: 0.8em;
+    border-bottom: 1px solid rgba(43, 38, 32, 0.25);
+  }
+
+  .date-corner{
+    position: relative;
+    z-index: 1;
+    text-align: right;
+    font-size: 0.85em;
+    letter-spacing: 0.5px;
+    opacity: 0.75;
+    margin: 0 0 1.1em;
+  }
+
+  #page-content{
+    position: relative;
+    z-index: 1;
+    min-height: 34vh;
+    opacity: 1;
+    transition: opacity 0.28s ease;
+  }
+
+  #page-content.fade{
+    opacity: 0;
+  }
+
+  p{
+    margin: 0 0 1.2em;
+  }
+
+  .poem-quote{
+    font-style: italic;
+  }
+
+  .poem-plain{
+    font-style: normal;
+  }
+
+  .pagination{
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    margin-top: 1.6em;
+  }
+
+  .page-arrow{
+    background: none;
+    border: none;
+    color: var(--ink);
+    font-size: 1.3em;
+    cursor: pointer;
+    padding: 4px 6px;
+    line-height: 1;
+    opacity: 0.75;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    font-family: 'Special Elite', monospace;
+  }
+
+  .page-arrow:hover{
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  .page-arrow.disabled{
+    opacity: 0.2;
+    cursor: default;
+    pointer-events: none;
+    transform: none;
+  }
+
+  .dots{
+    display: flex;
+    gap: 0.55em;
+  }
+
+  .dot{
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: rgba(43, 38, 32, 0.3);
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .dot:hover{
+    transform: scale(1.2);
+  }
+
+  .dot.active{
+    background: var(--ink);
+    transform: scale(1.15);
+  }
+
+  @media (max-width: 560px){
+    .letter{
+      font-size: 15px;
+      padding: 9vw 8vw 9vw;
+    }
+    .letter-title{
+      font-size: 1.15em;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <div class="sheet-wrap">
+    <div class="letter">
+      <div class="date-corner">São Paulo, 8 de setembro de 2026.</div>
+      <div class="letter-title">Carta para pequeno Leo III</div>
+      <div id="page-content"></div>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+<script>
+  const pages = ["      <p class=\"poem-plain\">\n        Ja que eu sei que você vai ler e não vai poder xingar de volta<br>\n        Tu é uma vagabunda, ei po, ainda to revoltada com o quao rapido você aprendeu, inclusive, sabe que a carta que contei meu passado não era manual de instruções ne engraçadinho?<br>\n        (-_-”) dividida entre a vontade de te xingar te querer e te dar uma paulada<br>\n        Essa semana tu vai ver eu subir a régua piranha<br>\n        Tu não me ve como amiga que to ligada<br>\n        Nem fudendo que vê.\n      </p>\n      <p class=\"poem-plain\">\n        Uma habilidade legal pra você, que aprendi recentemente, pessoas tímidas que sao simpáticas,  normalmente por isso mesmo tem uma facilidade/ predisposição a ser bom em comunicação ou algo de artes como design (mas as vezes nem a pessoa sabe) e querendo ou nao artes é um tipo de comunicação, mas no geral é predisposição comunicação verbal/não verbal, pacificadores naturais ou coisas relacionadas, mas tem que usar a imaginação pra entender as especificidades, legal ne não?\n      </p>", "      <p class=\"poem-plain\">\n        Pessoa muito autoritária tem predisposição pra ser líder nato (líder puro nao precisa mandar, as pessoas so obedecem o que precisa ser feito, claro que obviamente quanto mais bem feito seu próprio trabalho mais autoridade você ganha pra caso precise direcionar alguém) incrivelmente pessoas autoritárias costumam ser assim por não terem encontrado com um líder nato na vida pra saber o jeito certo de direcionar isso. Essa habilidade aqui é a tua base vagaba, demorei duas semanas pra conseguir esse diabo e tu conseguiu em dois dias vei, quando você domina o mandar sem dizer nada, domina mandar em si mesmo você consegue espelhar nos outros, o líder nato pode ter soluções em quatro esferas de perspectivas menores:\n      </p>\n      <p class=\"poem-plain\">\n        A emocional, que meche com a empatia pra mover as pessoas daí vem o lado sombra de manipulação ou chantagem emocional ou o lado luz de de dar atenção do jeito que a pessoa gosta/quer ou poderia gostar o que a motiva a fazer algo, isso vale pra si mesmo também ta\n      </p>\n      <p class=\"poem-plain\">\n        Vem a maneira prática, onde há um ganha ganha na situação, você consegue mostrar os benefícios daquilo de maneira tão clara que a pessoa fará por saber que se benefícia, o lado sombra disso seria voce tirar mais proveito do que deveria ou convencer a pessoa com base em benefícios que não existem ou incertos\n      </p>\n      <p class=\"poem-plain\">\n        A maneira racional, voce cria toda uma linha pra cumprir o que deve ser feito so pq deve ser feito e acabou ali, o lado sombra de uma solução assim é você ser cortante ao ponto de praticamente não fazer parte do todo\n      </p>", "      <p class=\"poem-plain\">\n        E por último o comando por inspiração, você através de carisma você vai dando empurrões mais ativamente, normalmente são aquelas pessoas que tem poder e a lábia e uma pressa do cão em fazer as coisas e que no lado ruim virão só ditadores que não atrai você a seguir as regras ou fazer alguma coisa a canela ajuda a despertar o melhor lado disso aqui inclusive\n      </p>\n      <p class=\"poem-plain\">\n        Quando você domina os quatro ai evolui pra outra habilidade chamada o imperador, a pessoa que só faz, consegue balancear tao bem os quatro anteriores que a obediência só acompanha não precisa ser pedida, líder natural obedece com facilidade por entender o mecanismo da ordem\n      </p>\n      <p class=\"poem-plain\">\n        A tua habilidade mestra é ver o todo e montar a estrutura de maneira tão amarrada que esse todo só vai ser seguido e cumprido, vem a postura que influencia o quanto isso vai ser feito(é assim que se aplica autoridade, quando a gente corrije nossa própria postura mesmo a distância as pessoas obedecem o que foi planejado, essa ainda to desenvolvendo mas é a tua base então lhe será útil)\n      </p>\n      <p class=\"poem-plain\">\n        Tu é rebelde mas não sei em que sentido, provável o de fé, às vezes tenho a impressão que tu não bota muita fé em si\n      </p>\n      <p class=\"poem-plain\">\n        eu vejo o tarot como uma árvore de habilidades que da pra ir combinando habilidades entre si, teu carma por exemplo, acabei encerrando teu loop acidentalmente, eu não ne, você que acreditou e botou fé em mim, e to indo encerrar o de mais um, legal ne\n      </p>", "      <p class=\"poem-plain\">\n        Tem outras habilidades legais mas vou deixar pra outro dia, inclusive, tua intuição quando mostrar algo em alguém é pq essa pessoa tá passando uma transição pesada de morte de morais, crenças antigos ou outras coisas que não servem, tua presença vai começar a causar isso em breve, eita situação divertida de observar no outro lado\n      </p>\n      <p class=\"poem-plain\">\n        No meu caso é outra coisa.\n      </p>\n      <p class=\"poem-plain\">\n        Eu e tu é pique de inimigos de dia amigos de noite, a pessoa que me aproxima de Deus so pelas raiva que tenho, as vezes eu rio muito com isso, ei po, as vezes me pergunto como tu ve tão rápido, e ainda aprende rapido se lascar.<br>\n        Inclusive o Palácio mental de estudo da pra ser refinado vou explicar de próxima\n      </p>\n      <p class=\"poem-plain\">\n        Abraço pra você piranha\n      </p>"];
+
+  let current = 0;
+  const contentEl = document.getElementById('page-content');
+  const paginationEl = document.getElementById('pagination');
+
+  function buildPagination(){
+    paginationEl.innerHTML = '';
+
+    const prev = document.createElement('button');
+    prev.className = 'page-arrow';
+    prev.innerHTML = '&#8249;';
+    prev.setAttribute('aria-label', 'Página anterior');
+    prev.addEventListener('click', () => {
+      if (current > 0){ current--; renderPage(); }
+    });
+    paginationEl.appendChild(prev);
+
+    const dotsWrap = document.createElement('div');
+    dotsWrap.className = 'dots';
+    pages.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === current ? ' active' : '');
+      dot.addEventListener('click', () => { current = i; renderPage(); });
+      dotsWrap.appendChild(dot);
+    });
+    paginationEl.appendChild(dotsWrap);
+
+    const next = document.createElement('button');
+    next.className = 'page-arrow';
+    next.innerHTML = '&#8250;';
+    next.setAttribute('aria-label', 'Próxima página');
+    next.addEventListener('click', () => {
+      if (current < pages.length - 1){ current++; renderPage(); }
+    });
+    paginationEl.appendChild(next);
+
+    prev.classList.toggle('disabled', current === 0);
+    next.classList.toggle('disabled', current === pages.length - 1);
+  }
+
+  function renderPage(){
+    contentEl.classList.add('fade');
+    setTimeout(() => {
+      contentEl.innerHTML = pages[current];
+      buildPagination();
+      contentEl.classList.remove('fade');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 180);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' && current < pages.length - 1){ current++; renderPage(); }
+    if (e.key === 'ArrowLeft' && current > 0){ current--; renderPage(); }
+  });
+
+  // initial render (no fade delay needed)
+  contentEl.innerHTML = pages[current];
+  buildPagination();
+</script>
+
+</body>
+</html>
