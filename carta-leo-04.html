@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carta Leo 04</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=MedievalSharp&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper: #ecdfb8;
+    --paper-dark: #ddc99a;
+    --ink: #2b2620;
+    --shadow: rgba(90, 70, 30, 0.28);
+  }
+
+  *{
+    box-sizing: border-box;
+  }
+
+  html, body{
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+  }
+
+  body{
+    font-family: 'Special Elite', 'Courier New', monospace;
+    color: var(--ink);
+    background: linear-gradient(160deg, #f7efdc 0%, #f1e7cd 45%, #ecdfc0 100%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 6vh 20px 8vh;
+    min-height: 100vh;
+  }
+
+  .sheet-wrap{
+    width: 100%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .letter{
+    position: relative;
+    width: 100%;
+    background:
+      radial-gradient(ellipse at 20% 10%, rgba(255,250,220,0.4), transparent 45%),
+      radial-gradient(ellipse at 85% 90%, rgba(150,120,60,0.18), transparent 50%),
+      linear-gradient(var(--paper), var(--paper-dark));
+    padding: 8vw 10vw 8vw;
+    box-shadow:
+      0 8px 20px var(--shadow),
+      0 20px 45px rgba(90,70,30,0.18);
+    border-radius: 2px;
+    line-height: 1.65;
+    font-size: 16.5px;
+    min-height: 52vh;
+  }
+
+  .letter::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at center, transparent 55%, rgba(120,90,40,0.15) 100%),
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.012) 0px, rgba(0,0,0,0.012) 1px, transparent 1px, transparent 2px);
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+
+  .letter::after{
+    content: "";
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 45px rgba(140,110,50,0.22), inset 0 0 10px rgba(0,0,0,0.12);
+    pointer-events: none;
+  }
+
+  .letter-title{
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    font-family: 'MedievalSharp', 'Special Elite', cursive;
+    font-size: 1.7em;
+    letter-spacing: 1px;
+    margin: 0.3em 0 0.2em;
+    color: #3a2e1a;
+  }
+
+  .flourish{
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    color: rgba(58, 46, 26, 0.55);
+    margin: 0 auto 1.5em;
+    width: 70%;
+  }
+
+  .flourish svg{
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .corner-ornament{
+    position: absolute;
+    z-index: 1;
+    font-size: 1.1em;
+    color: rgba(58, 46, 26, 0.35);
+    line-height: 1;
+  }
+
+  .corner-tl{ top: 14px; left: 16px; }
+  .corner-tr{ top: 14px; right: 16px; }
+  .corner-bl{ bottom: 14px; left: 16px; }
+  .corner-br{ bottom: 14px; right: 16px; }
+
+  .dropcap{
+    float: left;
+    font-family: 'MedievalSharp', 'Special Elite', cursive;
+    font-size: 3.6em;
+    line-height: 0.78;
+    padding: 0.02em 0.08em 0 0;
+    color: #3a2e1a;
+  }
+
+  .dropcap-p{
+    text-align: justify;
+    text-justify: inter-word;
+  }
+
+  .dropcap-p::after{
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  #page-content{
+    position: relative;
+    z-index: 1;
+    min-height: 34vh;
+    opacity: 1;
+    transition: opacity 0.28s ease;
+  }
+
+  #page-content.fade{
+    opacity: 0;
+  }
+
+  p{
+    margin: 0 0 1.2em;
+    text-align: justify;
+    text-justify: inter-word;
+  }
+
+  .poem-quote{
+    font-style: italic;
+  }
+
+  .poem-plain{
+    font-style: normal;
+  }
+
+  .pagination{
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    margin-top: 1.6em;
+  }
+
+  .page-arrow{
+    background: none;
+    border: none;
+    color: var(--ink);
+    font-size: 1.3em;
+    cursor: pointer;
+    padding: 4px 6px;
+    line-height: 1;
+    opacity: 0.75;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+    font-family: 'Special Elite', monospace;
+  }
+
+  .page-arrow:hover{
+    opacity: 1;
+    transform: scale(1.1);
+  }
+
+  .page-arrow.disabled{
+    opacity: 0.2;
+    cursor: default;
+    pointer-events: none;
+    transform: none;
+  }
+
+  .dots{
+    display: flex;
+    gap: 0.55em;
+  }
+
+  .dot{
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: rgba(43, 38, 32, 0.3);
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .dot:hover{
+    transform: scale(1.2);
+  }
+
+  .dot.active{
+    background: var(--ink);
+    transform: scale(1.15);
+  }
+
+  @media (max-width: 560px){
+    .letter{
+      font-size: 15px;
+      padding: 9vw 8vw 9vw;
+    }
+    .letter-title{
+      font-size: 1.4em;
+    }
+    .dropcap{
+      font-size: 2.8em;
+    }
+    .corner-ornament{
+      font-size: 0.85em;
+    }
+    .corner-tl, .corner-tr{ top: 10px; }
+    .corner-bl, .corner-br{ bottom: 10px; }
+    .corner-tl, .corner-bl{ left: 10px; }
+    .corner-tr, .corner-br{ right: 10px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="sheet-wrap">
+    <div class="letter">
+      <div class="corner-ornament corner-tl">&#10086;</div>
+      <div class="corner-ornament corner-tr">&#10086;</div>
+      <div class="corner-ornament corner-bl">&#10086;</div>
+      <div class="corner-ornament corner-br">&#10086;</div>
+      <div class="letter-title">Carta Leo 04</div>
+      <div class="flourish" aria-hidden="true">
+        <svg viewBox="0 0 300 26" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 13 C 60 13, 90 2, 130 13 C 140 16, 145 4, 150 4 C 155 4, 160 16, 170 13 C 210 2, 240 13, 300 13"
+                fill="none" stroke="currentColor" stroke-width="1.2"/>
+          <circle cx="150" cy="4" r="2.6" fill="currentColor"/>
+        </svg>
+      </div>
+      <div id="page-content"></div>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+<script>
+  const pages = ["      <p class=\"poem-plain dropcap-p\"><span class=\"dropcap\">V</span>ou passar a chamar voce de piranha S2</p>\n      <p class=\"poem-plain\">Ei po, sabe um medo que tenho ?</p>\n      <p class=\"poem-plain\">Ser queimada na fogueira por poder ver mais do que uma pessoa normal.</p>\n      <p class=\"poem-plain\">Mesmo sem o tarot eu sempre vi mais do que deveria, as vezes me pergunto se uma hora as pessoas não vão perceber e me condenar por isso, não no sentido de me isolar mas no sentido de me machucar, o ser humano tende a ficar agressivo com o que não entende e desconhece e eu ainda tenho uma séria dificuldade de entender o conceito de mal e bem de uma pessoa normal, não faz sentido pra mim e tambem nao capto o sentido de esconder a verdade também, isso te irritou um tanto pq tu gosta de fazer as coisas no teu tempo mas problema seu, também não gosto de bisbilhoteiro estamos quites nessa tu com teus curiosos eu com o tarot.</p>\n      <p class=\"poem-plain\">É estranho, tu sabe que eu sou assim e até agora não me chamou de herege nem nada, tu parece muito pelo contrário achar divertido, me faz questionar qual de nos dois é pior eu ou tu kkkkkkkkkkk.</p>\n      <p class=\"poem-plain\">Ler padrões é uma habilidade autista foda, sabia que clarividência é explicado na ciência como a capacidade de ver e imaginar cenarios ? Seu cérebro consciente cruza informações, seu inconsciente junta e daí vem a clarividência(sonhar com o futuro ou deja vus), o funcionamento cerebral de pessoas assim não para, aumentando a propensão delas a burnout e afins.</p>", "      <p class=\"poem-plain\">Na religião acalmar a mente ajuda essas pessoas a descansar a cabeça enquanto estão conscientes, com o tempo o cérebro no inconsciente vai ficando mais preciso, mais cirúrgico, na ciência as pessoas amortecem esse(clarividencia/analise de padroes) funcionamento forçando o descanso com remédios, o corpo é forçado a descansar mas a mente continua funcionando enquanto você está dormindo, quando você acorda desse doping o cérebro esta cansado e sem energia pra ordenar o corpo a obedecer, é um funcionamento curioso, por isso remedios sem acompanhamento psicologico nao funcionam, tava observando uma pessoa especifica e notei que convivio social é uma chave de cura, o ser humano imita a cura nos outros ( uma vez que alguém acha o processo da energia de cura os outros inconscientemente tentam imitar ate chegar na propria melhor versão, é um processo complexo que até eu ainda nao entendo mas é interessante) .</p>\n      <p class=\"poem-plain\">Não importa a parte, é sempre um rótulo de algo a parte, ubanda, autismo, pessoa doidinha, antipática, esse ultimo ja virou habito, por isso mesmo fico pensando se alguem souber que eu consigo ver o que elas tentam tao desesperadamente esconder, o que farão?</p>\n      <p class=\"poem-plain\">tu por exemplo negou com todas as forças. sabe pq eu sabia que tinha algo errado quando tu disse que iria me comer? você olhou nos meus olhos, não no corpo, não sei a razao ao certo mas de qualquer forma iria dar errado tu ficar comigo, o errado que falo pergunte a vossa imaginação, foi a leitura mais engraçada que ja li.</p>", "      <p class=\"poem-plain\">Com o tempo isso tudo parou de importar, as vezes ainda penso nas expectativas das pessoas em mim, entediante. Parece arrogante falar isso mas é simplesmente entediante, tem coisas que as vezes aos meus olhos tem uma solução tão óbvia e simples mas quando digo as pessoas acham cinco problemas novos seja na solução seja no problema original, ainda dou soluções vez ou outra principalmente por sempre ser surpreendida com as pessoas aplicando o que eu disse de formas aleatórias, é curioso a capacidade humana nesse quesito.</p>\n      <p class=\"poem-plain\">tu é uma pessoa curiosa de se observar, tuas reações sao sempre divertidas, eu achei que tava ficando doida até ver a figurinha e fiquei \"eureka, gotcha gatinho\" mas sério, quando esse ano acabar infelizmente vou ver tua cara de novo em algum dia aleatório dos próximos 5 anos, Estevão tbm so não sei quando, e torço muito pra esse dia deixar de existir no efeito borboleta, sério, ter que ver o ex é foda mas é nosso karma, sabe um negocio legal? o destino dele, em todas as vidas a gente sempre se conhece e o resultado é sempre o mesmo ate a linha do tempo ano passado, pq na maioria das linhas e possibilidades eu morri ano passado, ver a propria morte é um negocio foda, olhando o lado positivo, aprendi o mundo espiritual por isso e agora to traduzindo ele pra ciência e logica.</p>", "      <p class=\"poem-plain\">Tempo é um negócio engraçado, cada momento é uma gota que cai no oceano que vai reverberando, governar o reino interno é conseguir deduzir e controlar possibilidades e escolher qual a melhor e qual se deseja, uma vez que você cria dentro de si uma base de sentimento para cada tipo de situação você escolhe o método, a reação e o sentimento e resolve, a união forma o que no baralho são arcanos maiores, o entendimento disso forma a sacerdotisa, a permissão para entender gera o papa, a completude de todos os arcanos gera o mundo e a capacidade de desapegar de ciclos antigos gera o louco mas os mesmos aprendizados se repetem, você só fica craque em lidar com eles, poxa, vou passar a te ensinar o oculto misturado com ciência, assim vou trazer a luz de vossa consciência o que já tá escrito em vossa alma, vai ajudar você a lidar com as pessoas, só não aplique em hipótese nenhuma a observação, uma vez que você vê, não dá mais pra desver certas coisas nas pessoas .</p>\n      <p class=\"poem-plain\">Lembra da frase sobre o diabo e a estrela? diabo é meu arcano, mestre do oculto e segredos, uma pessoa que entende de tarot ia bater o olho naquilo e ver o reflexo da cabala e alta magia kkkkkkkkkk, tu aprendendo um negócio que as pessoas levam meses em dias pra sentir, controlar, absorver e aplicar e com uma facilidade dos diabos ainda, como pode uma vagabunda dessas, ainda fico revoltada mas tu me fez ver que eu demonstro os arcanos e as pessoas absorvem e aplicam, mas dai pra frente ja nao é comigo.</p>", "      <p class=\"poem-plain\">É exatamente por esses conhecimentos e outros estranhos que tenho quase certeza que qualquer dia se eu vacilar vão me queimar na fogueira.</p>"];
+
+  let current = 0;
+  const contentEl = document.getElementById('page-content');
+  const paginationEl = document.getElementById('pagination');
+
+  function buildPagination(){
+    paginationEl.innerHTML = '';
+
+    const prev = document.createElement('button');
+    prev.className = 'page-arrow';
+    prev.innerHTML = '&#8249;';
+    prev.setAttribute('aria-label', 'Página anterior');
+    prev.addEventListener('click', () => {
+      if (current > 0){ current--; renderPage(); }
+    });
+    paginationEl.appendChild(prev);
+
+    const dotsWrap = document.createElement('div');
+    dotsWrap.className = 'dots';
+    pages.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.className = 'dot' + (i === current ? ' active' : '');
+      dot.addEventListener('click', () => { current = i; renderPage(); });
+      dotsWrap.appendChild(dot);
+    });
+    paginationEl.appendChild(dotsWrap);
+
+    const next = document.createElement('button');
+    next.className = 'page-arrow';
+    next.innerHTML = '&#8250;';
+    next.setAttribute('aria-label', 'Próxima página');
+    next.addEventListener('click', () => {
+      if (current < pages.length - 1){ current++; renderPage(); }
+    });
+    paginationEl.appendChild(next);
+
+    prev.classList.toggle('disabled', current === 0);
+    next.classList.toggle('disabled', current === pages.length - 1);
+  }
+
+  function renderPage(){
+    contentEl.classList.add('fade');
+    setTimeout(() => {
+      contentEl.innerHTML = pages[current];
+      buildPagination();
+      contentEl.classList.remove('fade');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 180);
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' && current < pages.length - 1){ current++; renderPage(); }
+    if (e.key === 'ArrowLeft' && current > 0){ current--; renderPage(); }
+  });
+
+  // initial render (no fade delay needed)
+  contentEl.innerHTML = pages[current];
+  buildPagination();
+</script>
+
+</body>
+</html>
